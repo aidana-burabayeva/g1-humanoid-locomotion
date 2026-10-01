@@ -1,0 +1,103 @@
+{
+  "kind": "acceptance",
+  "manifest": {
+    "schema_version": 1,
+    "scope": "mjlab simulation only; no real G1 or final-policy sim2sim claim",
+    "task": "G1-FinalRoute-Stairs5-Deploy-NoCmdCurriculum-SymLoss-YawW4",
+    "checkpoint_name": "model_28996.pt",
+    "checkpoint_iteration": 28996,
+    "checkpoint_sha256": "3a6f3dc46b2ccfe59e2466a5c5a7d5ca71e152815daa7da4be0f91da0f72a8bb",
+    "source_sha256": "8297885a39765054d1764e589e740d16536e3adeb4f20d51697b82738eef5ab8",
+    "lock_sha256": "863ec852c5416caf9f684c777b0f9d64c199209ef90177b0d0466cc26aef008f",
+    "mjlab_commit": "c2e1e06400e309b6897a536693fe5d2aa772c5b2",
+    "dependencies": {
+      "mjlab": "1.6.0",
+      "mujoco": "3.11.0",
+      "mujoco-warp": "3.11.0",
+      "numpy": "2.5.3",
+      "rsl-rl-lib": "5.5.1",
+      "tensordict": "0.14.2",
+      "torch": "2.14.0",
+      "tyro": "1.0.16",
+      "warp-lang": "1.17.0"
+    },
+    "dimensions": {
+      "actor_input": 283,
+      "actor_output": 29,
+      "actor_normalizer": 283,
+      "critic_input": 298,
+      "critic_normalizer": 298
+    },
+    "terrain_row": 4,
+    "command": [
+      0.5,
+      0.0,
+      0.0
+    ],
+    "steer": "cross_track",
+    "num_envs": 20,
+    "duration_s": 60.0,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "acceptance": {
+      "minimum_passes": 17,
+      "maximum_vx_mae_m_s": 0.15,
+      "maximum_success_spread": 0.15,
+      "maximum_seam_falls": 2
+    }
+  },
+  "dependencies": {
+    "mjlab": "1.6.0",
+    "mujoco": "3.11.0",
+    "mujoco-warp": "3.11.0",
+    "numpy": "2.5.3",
+    "rsl-rl-lib": "5.5.1",
+    "tensordict": "0.14.2",
+    "torch": "2.14.0",
+    "tyro": "1.0.16",
+    "warp-lang": "1.17.0"
+  },
+  "model_sha256": "3a6f3dc46b2ccfe59e2466a5c5a7d5ca71e152815daa7da4be0f91da0f72a8bb",
+  "source_sha256": "8297885a39765054d1764e589e740d16536e3adeb4f20d51697b82738eef5ab8",
+  "result_files": [
+    "seed0.json",
+    "seed1.json",
+    "seed2.json"
+  ],
+  "accepted": true,
+  "checks": {
+    "minimum_passes_each_seed": true,
+    "overall_vx_mae": true,
+    "success_spread": true,
+    "seam_falls": true
+  },
+  "passed_per_seed": [
+    19,
+    18,
+    18
+  ],
+  "success_spread": 0.05,
+  "falls_per_seed": [
+    0,
+    0,
+    0
+  ],
+  "timeouts_per_seed": [
+    1,
+    2,
+    2
+  ],
+  "left_row_per_seed": [
+    0,
+    0,
+    0
+  ],
+  "vx_mae_per_seed": [
+    0.05739589408040047,
+    0.06039208918809891,
+    0.06108982488512993
+  ]
+}

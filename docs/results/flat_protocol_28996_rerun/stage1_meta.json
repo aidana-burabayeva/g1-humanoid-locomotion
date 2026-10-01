@@ -1,0 +1,66 @@
+{
+  "kind": "run_meta",
+  "protocol": "stage1",
+  "thresholds": {
+    "mae_vx": 0.1,
+    "mae_vy": 0.1,
+    "mae_wz": 0.15,
+    "max_falls": 0,
+    "stand_max_disp_m": 0.5
+  },
+  "task": "G1-Flat-Deploy-NoCmdCurriculum-SymLoss",
+  "seed": 0,
+  "num_envs": 20,
+  "duration_s_hold": 60.0,
+  "duration_s_brake": 20.0,
+  "duration_s_by_scenario": {
+    "brake": 20.0,
+    "fwd_05": 60.0,
+    "fwd_10": 60.0,
+    "fwd_yaw_05": 60.0,
+    "left_04": 60.0,
+    "right_04": 60.0,
+    "stand": 60.0,
+    "yaw_neg_05": 60.0,
+    "yaw_pos_05": 60.0
+  },
+  "brake_hold_s": 10.0,
+  "brake_after_s": 10.0,
+  "terrain_row": null,
+  "checkpoint": "/model/model_28996.pt",
+  "scenarios_this_run": [
+    "stand",
+    "fwd_05",
+    "fwd_10",
+    "yaw_pos_05",
+    "yaw_neg_05",
+    "fwd_yaw_05",
+    "left_04",
+    "right_04",
+    "brake"
+  ],
+  "scenarios_known": [
+    "brake",
+    "fwd_05",
+    "fwd_10",
+    "fwd_yaw_05",
+    "left_04",
+    "right_04",
+    "stand",
+    "yaw_neg_05",
+    "yaw_pos_05"
+  ],
+  "plan_required": [
+    "stand",
+    "fwd_05",
+    "fwd_10",
+    "yaw_pos_05",
+    "yaw_neg_05",
+    "fwd_yaw_05",
+    "left_04",
+    "right_04",
+    "brake"
+  ],
+  "plan_required_missing": [],
+  "overall": "PASS"
+}

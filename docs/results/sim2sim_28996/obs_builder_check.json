@@ -1,0 +1,39 @@
+{
+  "task": "G1-Flat-Deploy-NoCmdCurriculum-SymLoss",
+  "checkpoint": "/model/model_28996.pt",
+  "onnx": "/model/model_28996.onnx",
+  "steps": 300,
+  "num_envs": 2,
+  "comparisons": 600,
+  "cmd": [
+    0.5,
+    0.0,
+    0.0
+  ],
+  "metadata_vs_exact_mismatch": [],
+  "obs_builder_max_abs_diff_per_term": {
+    "base_ang_vel": 1.1920928955078125e-07,
+    "projected_gravity": 1.1175870895385742e-08,
+    "joint_pos": 5.960464477539063e-08,
+    "joint_vel": 0.0,
+    "actions": 0.0,
+    "command": 0.0,
+    "height_scan": 1.4901161193847656e-08
+  },
+  "obs_builder_max_abs_diff": 1.1920928955078125e-07,
+  "obs_builder_max_abs_diff_per_term_without_encoder_bias": {
+    "base_ang_vel": 1.1920928955078125e-07,
+    "projected_gravity": 1.1175870895385742e-08,
+    "joint_pos": 0.014911998063325882,
+    "joint_vel": 0.0,
+    "actions": 0.0,
+    "command": 0.0,
+    "height_scan": 1.4901161193847656e-08
+  },
+  "encoder_bias_abs_max": 0.014330226927995682,
+  "height_scan_ptp_on_flat_max": 0.0,
+  "onnx_on_built_obs_vs_torch_max_abs_diff": 1.6689300537109375e-06,
+  "tol_obs": 1e-05,
+  "tol_act": 0.0001,
+  "verdict": "PASS"
+}

@@ -1,0 +1,128 @@
+{
+  "kind": "stairs10_container_acceptance",
+  "model_sha256": "ea7a1f2b3c083e87388f6c3391598d7efbb2096e574395fafa95b8d667068269",
+  "image_id": "sha256:07623f59d5d1a6b004a2590b5d8ba60ece22219f1b10398a72f61964427c1ac3",
+  "source_sha256": "fa47394052d9fbc7b10a4ad34fbd35f7cfb8a1537ce326953a7e6b13e8b3d6cd",
+  "dependencies": {
+    "mjlab": "1.6.0",
+    "mujoco": "3.11.0",
+    "mujoco-warp": "3.11.0",
+    "numpy": "2.5.3",
+    "rsl-rl-lib": "5.5.1",
+    "tensordict": "0.14.2",
+    "torch": "2.14.0",
+    "tyro": "1.0.16",
+    "warp-lang": "1.17.0"
+  },
+  "experiment_sources": {
+    "experiments/05_stairs/container_validate.py": "46bbb039a6cbc41616c56c585321d4a6c1edf1201ca2ef73079d152f46913035",
+    "experiments/05_stairs/evaluate_stairs.py": "3f29b97fab2dd93fc04a0cc95b88865fbc9d46e8b766af841b7f2279dda617d7",
+    "experiments/05_stairs/evaluate_mixed_route.py": "5b560e927a20435ac3358c72e060c8752ec13538ed74c3bb5f6369ea744ed4b4",
+    "experiments/05_stairs/stairs10_tasks.py": "952c04fd8fe1a5dfcb33c53b776af9f3278cb4f4e0723ace4f10d1fa22f12c39",
+    "experiments/02_flat_baseline/stage1_protocol.py": "b63c3cbf8468ec77902af6088c9764b5a74be693c56c888fe78ee62cd10d5d7d"
+  },
+  "python_executable": "/app/.venv/bin/python",
+  "results": {
+    "regular10": [
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.10406487435102463
+      },
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.10265514999628067
+      },
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09605151414871216
+      }
+    ],
+    "inverted10": [
+      {
+        "passed": 18,
+        "fell": 2,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.10104560852050781
+      },
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09872591495513916
+      },
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09746773540973663
+      }
+    ],
+    "original": [
+      {
+        "passed": 19,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 1,
+        "mae_vx_m_s": 0.04542580246925354
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.04931332916021347
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.04807262495160103
+      }
+    ],
+    "mixed10": [
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.06901466846466064
+      },
+      {
+        "passed": 18,
+        "fell": 2,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.06908460706472397
+      },
+      {
+        "passed": 18,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 1,
+        "mae_vx_m_s": 0.06691613048315048
+      }
+    ],
+    "flat": "PASS"
+  },
+  "checks": {
+    "regular10": true,
+    "inverted10": true,
+    "original": true,
+    "mixed10": true,
+    "flat": true
+  },
+  "overall": "PASS"
+}

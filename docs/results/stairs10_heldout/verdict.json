@@ -1,0 +1,109 @@
+{
+  "kind": "stairs10_candidate_heldout",
+  "model_sha256": "ea7a1f2b3c083e87388f6c3391598d7efbb2096e574395fafa95b8d667068269",
+  "image_id": "sha256:07623f59d5d1a6b004a2590b5d8ba60ece22219f1b10398a72f61964427c1ac3",
+  "mjlab_commit": "c2e1e06400e309b6897a536693fe5d2aa772c5b2",
+  "dependencies": {
+    "mjlab": "1.6.0",
+    "mujoco": "3.11.0",
+    "mujoco-warp": "3.11.0",
+    "numpy": "2.5.3",
+    "rsl-rl-lib": "5.5.1",
+    "tensordict": "0.14.2",
+    "torch": "2.14.0",
+    "tyro": "1.0.16",
+    "warp-lang": "1.17.0"
+  },
+  "seed_roles": {
+    "3": "training_seed",
+    "4": "held_out",
+    "5": "held_out"
+  },
+  "source_sha256": "fa47394052d9fbc7b10a4ad34fbd35f7cfb8a1537ce326953a7e6b13e8b3d6cd",
+  "experiment_sources": {
+    "experiments/05_stairs/container_heldout.py": "a77821c427868cfcc7d9b7f295a4b3e6a9408772709901a477c7ca1860273c9e",
+    "experiments/05_stairs/evaluate_stairs.py": "3f29b97fab2dd93fc04a0cc95b88865fbc9d46e8b766af841b7f2279dda617d7",
+    "experiments/05_stairs/evaluate_mixed_route.py": "5b560e927a20435ac3358c72e060c8752ec13538ed74c3bb5f6369ea744ed4b4",
+    "experiments/05_stairs/stairs10_tasks.py": "952c04fd8fe1a5dfcb33c53b776af9f3278cb4f4e0723ace4f10d1fa22f12c39"
+  },
+  "results": {
+    "regular10": {
+      "3": {
+        "passed": 17,
+        "fell": 3,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.11585159599781036
+      },
+      "4": {
+        "passed": 17,
+        "fell": 3,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.11077175289392471
+      },
+      "5": {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.1250925362110138
+      }
+    },
+    "inverted10": {
+      "3": {
+        "passed": 18,
+        "fell": 2,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09469034522771835
+      },
+      "4": {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09875215590000153
+      },
+      "5": {
+        "passed": 17,
+        "fell": 3,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09593595564365387
+      }
+    },
+    "mixed10": {
+      "3": {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.06964965909719467
+      },
+      "4": {
+        "passed": 16,
+        "fell": 3,
+        "left_row": 0,
+        "not_finished": 1,
+        "mae_vx_m_s": 0.06654643267393112
+      },
+      "5": {
+        "passed": 17,
+        "fell": 3,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.06592445075511932
+      }
+    }
+  },
+  "checks": {
+    "regular10": true,
+    "regular10_training_seed3": true,
+    "inverted10": true,
+    "inverted10_training_seed3": true,
+    "mixed10": false,
+    "mixed10_training_seed3": true
+  },
+  "overall": "FAIL"
+}
