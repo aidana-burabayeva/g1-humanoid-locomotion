@@ -209,3 +209,9 @@ commands and outputs.
   Learning Task Symmetric Robot Policies", ICRA 2024.
 - [Unitree Robotics](https://github.com/unitreerobotics/unitree_mujoco): the
   G1 robot model; the vendored MJCF files keep their BSD 3-Clause license.
+
+## License
+
+Apache License 2.0 — see [LICENSE](LICENSE). The Unitree G1 model files in
+[`third_party/unitree_mujoco`](third_party/unitree_mujoco) are distributed
+under their own BSD 3-Clause license, included in that directory.
