@@ -1,0 +1,24 @@
+[project]
+name = "g1-locomotion-sim"
+version = "0.2.0"
+description = "Reproducible mjlab training and evaluation for one G1 locomotion policy"
+requires-python = "==3.12.*"
+dependencies = [
+  "mjlab @ git+https://github.com/mujocolab/mjlab@c2e1e06400e309b6897a536693fe5d2aa772c5b2",
+  "mujoco==3.11.0",
+  "mujoco-warp==3.11.0",
+  "numpy==2.5.3",
+  "rsl-rl-lib==5.5.1",
+  "tensordict==0.14.2",
+  "torch==2.14.0",
+  "tyro==1.0.16",
+  "warp-lang==1.17.0",
+]
+
+[[tool.uv.index]]
+name = "nvidia"
+url = "https://pypi.nvidia.com/"
+explicit = true
+
+[tool.uv.sources]
+warp-lang = { index = "nvidia" }

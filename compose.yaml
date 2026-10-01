@@ -1,0 +1,155 @@
+name: g1-humanoid-locomotion
+
+# Every service runs the same image. Weights are mounted read-only at /model;
+# results are written to ./outputs. Each service's entrypoint is the Python
+# interpreter, so `docker compose run --rm <service> <script> <args>` replaces
+# the default command (see README for smoke-test commands).
+x-sim: &sim
+  image: g1-humanoid-locomotion:dev
+  build:
+    context: .
+    dockerfile: docker/Dockerfile
+  user: "${HOST_UID:-1000}:${HOST_GID:-1000}"
+  working_dir: /app
+  entrypoint: ["python"]
+  environment:
+    HOME: /outputs
+    XDG_CACHE_HOME: /outputs/cache
+    MUJOCO_GL: egl
+    PYTHONDONTWRITEBYTECODE: "1"
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: 1
+            capabilities: [gpu]
+  read_only: true
+  tmpfs:
+    - /tmp
+  volumes:
+    - type: bind
+      source: ./weights
+      target: /model
+      read_only: true
+    - type: bind
+      source: ./outputs
+      target: /outputs
+
+services:
+  # Release acceptance: continuous route, 20 envs x 60 s, seeds 0/1/2.
+  eval-route:
+    <<: *sim
+    command: ["/app/scripts/eval_route.py"]
+
+  # Flat command protocol (nine required scenarios) on the release checkpoint.
+  eval-flat:
+    <<: *sim
+    command:
+      - /app/scripts/eval_flat_protocol.py
+      - /model/model_28996.pt
+      - --task
+      - G1-Flat-Deploy-NoCmdCurriculum-SymLoss
+      - --num-envs
+      - "20"
+      - --duration
+      - "60"
+      - --seed
+      - "0"
+      - --out
+      - /outputs/flat_protocol_28996
+      - --scenarios
+      - stand
+      - fwd_05
+      - fwd_10
+      - yaw_pos_05
+      - yaw_neg_05
+      - fwd_yaw_05
+      - left_04
+      - right_04
+      - brake
+
+  # Experimental 10 cm stair protocol on model_33800 (selection seeds 0-2).
+  # Held-out seeds: docker compose run --rm eval-stairs10 /app/scripts/eval_stairs10_heldout.py
+  eval-stairs10:
+    <<: *sim
+    command: ["/app/scripts/eval_stairs10.py"]
+
+  # Terrain seams: flat -> 5 cm stairs on rows 0/4/9 with the release checkpoint.
+  eval-transitions:
+    <<: *sim
+    command:
+      - /app/scripts/eval_transitions.py
+      - /model/model_28996.pt
+      - --first
+      - flat
+      - --out
+      - /outputs/transitions_flat_28996.json
+
+  # Video with HUD overlay (CPU physics, EGL rendering, ffmpeg/libx264).
+  render:
+    <<: *sim
+    command:
+      - /app/scripts/render_video.py
+      - commands
+      - --checkpoint
+      - /model/model_28996.pt
+      - --hud
+      - --plots
+      - --scan-viz
+      - --out
+      - /outputs/video/flat_commands_28996.mp4
+
+  # torch vs ONNX Runtime action parity on the release checkpoint (tolerance 1e-4).
+  onnx-parity:
+    <<: *sim
+    command:
+      - /app/scripts/onnx_parity.py
+      - --task
+      - G1-Flat-Deploy-NoCmdCurriculum-SymLoss
+      - --checkpoint
+      - /model/model_28996.pt
+      - --onnx
+      - /model/model_28996.onnx
+      - --neg-checkpoint
+      - /model/model_33800.pt
+      - --obs-spec
+      - /app/src/g1_locomotion/sim2sim/obs_spec.yaml
+      - --cmd
+      - 0.5,0,0
+      - --tol
+      - "1e-4"
+      - --json-out
+      - /outputs/onnx_parity_28996.json
+
+  # ONNX policy in the unitree_mujoco G1 model (plain MuJoCo, no mjlab/torch), 60 s on a plane.
+  sim2sim:
+    <<: *sim
+    command:
+      - /app/scripts/sim2sim_unitree_mujoco.py
+      - --onnx
+      - /model/model_28996.onnx
+      - --deploy-cfg
+      - /app/src/g1_locomotion/sim2sim/deploy_cfg.json
+      - --cmd
+      - 0.5,0,0
+      - --duration
+      - "60"
+      - --out
+      - /outputs/sim2sim_28996_flat.json
+
+  # Training entry point (mjlab CLI). Starts the 10 cm stair fine-tune task by default.
+  train:
+    <<: *sim
+    profiles: ["train"]
+    command:
+      - /app/scripts/train.py
+      - G1-Mix4-Stairs7p5to10-TrackLinW2p5-Deploy-SymLoss-YawW4
+      - --env.scene.num-envs
+      - "512"
+      - --agent.max-iterations
+      - "2000"
+      - --agent.logger
+      - tensorboard
+      - --log-root
+      - /outputs/train

@@ -1,0 +1,5 @@
+outputs/*
+!outputs/.gitkeep
+.venv/
+__pycache__/
+*.pyc

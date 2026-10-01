@@ -1,0 +1,14 @@
+.git
+.venv
+outputs
+media
+docs
+weights/*.pt
+weights/*.onnx
+**/__pycache__
+**/*.pyc
+**/*.mp4
+**/*.png
+README.md
+compose.yaml
+docker

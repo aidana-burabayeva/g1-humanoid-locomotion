@@ -1,0 +1,187 @@
+# Actor input specification for the deploy runner.
+#
+# Why this file exists: mjlab's ONNX metadata has term NAMES but NOT their
+# dimensions and offsets (established by checking with onnx_parity.py). The
+# runner on the robot has to build the vector itself, so the order and layout
+# are fixed here explicitly.
+#
+# Numbers obtained PROGRAMMATICALLY, not from memory:
+#   scripts/onnx_parity.py --obs-spec (CPU run) ->
+#   ObservationManager.group_obs_dim / group_obs_term_dim of the built env.
+#
+# DRAFT. Rebuild for the final task if the set of terms changes.
+
+spec_version: 0
+generated_from:
+  task: G1-Rough-Deploy
+  module: src/g1_locomotion/tasks/deploy_obs.py
+  mjlab_version: 1.5.3
+  verified_by: "scripts/onnx_parity.py --obs-spec"
+  # The paired flat task G1-Flat-Deploy has the SAME set and dimensions of
+  # actor input (283), it only differs in scene terrain.
+
+policy:
+  actor_input_dim: 283          # 286 stock minus base_lin_vel (3)
+  critic_input_dim: 298         # unchanged: the critic still keeps base_lin_vel
+  action_dim: 29
+  control_dt: 0.02              # step_dt, 50 Hz
+  physics_dt: 0.005
+  history_length: 1             # actor group: history_length=None
+  concatenate_terms: true
+
+# Term order = concatenation order. offset is the slice start, dim is its length.
+# Sum of dim = 283.
+terms:
+  - name: base_ang_vel
+    offset: 0
+    dim: 3
+    source: 'IMU gyro (mjlab: builtin_sensor "robot/imu_ang_vel")'
+    frame: body (pelvis), axes x,y,z
+    units: rad/s
+    scale: 1.0
+    train_noise: uniform(-0.2, +0.2)
+
+  - name: projected_gravity
+    offset: 3
+    dim: 3
+    source: unit gravity vector in body axes (mjlab projected_gravity_b)
+    runtime: from the IMU orientation quaternion; g is normalized, vector length = 1
+    units: dimensionless
+    scale: 1.0
+    train_noise: uniform(-0.05, +0.05)
+
+  - name: joint_pos
+    offset: 6
+    dim: 29
+    formula: q[i] - q_default[i]
+    source: encoders
+    units: rad
+    scale: 1.0
+    train_noise: uniform(-0.01, +0.01)
+    note: >
+      Training uses joint_pos_biased (biased=True) — a constant
+      calibration offset is added to the position. On the robot this is a
+      genuine encoder calibration error, nothing needs to be added deliberately.
+
+  - name: joint_vel
+    offset: 35
+    dim: 29
+    formula: dq[i] - dq_default[i]   # dq_default = 0
+    source: encoders (differentiation / built-in estimate)
+    units: rad/s
+    scale: 1.0
+    train_noise: uniform(-1.5, +1.5)
+
+  - name: actions
+    offset: 64
+    dim: 29
+    source: PREVIOUS policy output, before scaling and offset
+    units: dimensionless
+    scale: 1.0
+    train_noise: none
+    note: zero on the first step of an episode
+
+  - name: command
+    offset: 93
+    dim: 3
+    layout: [lin_vel_x, lin_vel_y, ang_vel_z]
+    source: operator / planner
+    units: [m/s, m/s, rad/s]
+    scale: 1.0
+    train_noise: none
+    note: >
+      The proprioceptive part is offsets 0..95 (96 values). That is exactly
+      the number that matters for the blind (no-scan) variant: 99 - 3 = 96.
+
+  - name: height_scan
+    offset: 96
+    dim: 187
+    source: RayCastSensor "terrain_scan"
+    frame: body "pelvis", ray_alignment=yaw (the grid rotates with yaw;
+           roll and pitch are NOT accounted for)
+    pattern:
+      grid_size_m: [1.6, 1.0]     # x forward, y left
+      resolution_m: 0.1
+      nx: 17                      # x = -0.8 .. +0.8 step 0.1
+      ny: 11                      # y = -0.5 .. +0.5 step 0.1
+      total_rays: 187
+      direction: [0, 0, -1]
+      # torch.meshgrid(x, y, indexing="xy") -> grid [ny, nx], flatten row-major
+      # (raycast_sensor.py:81-92). Order: outer loop over y, inner over x.
+      order: "for y in y_values: for x in x_values: ray(x, y)"
+    value: sensor frame height above the ray hit point (meters)
+    miss_value: 5.0               # max_distance, if the ray missed
+    scale: 0.2                    # = 1 / max_distance (5.0)
+    train_noise: uniform(-0.1, +0.1)   # noise applied BEFORE scale
+    note: >
+      On the real robot the source is a LiDAR/depth height map. When moving
+      to a blind variant, this term is dropped entirely and the actor input
+      becomes 96.
+
+# Joint order for joint_pos / joint_vel / actions.
+# Taken from entity.joint_names of the built env (29 G1 actuators).
+joint_order:
+  - left_hip_pitch_joint
+  - left_hip_roll_joint
+  - left_hip_yaw_joint
+  - left_knee_joint
+  - left_ankle_pitch_joint
+  - left_ankle_roll_joint
+  - right_hip_pitch_joint
+  - right_hip_roll_joint
+  - right_hip_yaw_joint
+  - right_knee_joint
+  - right_ankle_pitch_joint
+  - right_ankle_roll_joint
+  - waist_yaw_joint
+  - waist_roll_joint
+  - waist_pitch_joint
+  - left_shoulder_pitch_joint
+  - left_shoulder_roll_joint
+  - left_shoulder_yaw_joint
+  - left_elbow_joint
+  - left_wrist_roll_joint
+  - left_wrist_pitch_joint
+  - left_wrist_yaw_joint
+  - right_shoulder_pitch_joint
+  - right_shoulder_roll_joint
+  - right_shoulder_yaw_joint
+  - right_elbow_joint
+  - right_wrist_roll_joint
+  - right_wrist_pitch_joint
+  - right_wrist_yaw_joint
+
+# Policy output -> actuator position setpoint.
+# q_target[i] = action[i] * action_scale[i] + default_joint_pos[i]
+# (JointPositionActionCfg, use_default_offset=True; values read from the
+#  built action_manager, not from the config)
+action:
+  formula: "q_target = action * action_scale + default_joint_pos"
+  default_joint_pos:
+    [-0.312, 0.0, 0.0, 0.669, -0.363, 0.0,
+     -0.312, 0.0, 0.0, 0.669, -0.363, 0.0,
+      0.0, 0.0, 0.0,
+      0.2, 0.2, 0.0, 0.6, 0.0, 0.0, 0.0,
+      0.2, -0.2, 0.0, 0.6, 0.0, 0.0, 0.0]
+  action_scale:
+    [0.5475, 0.3507, 0.5475, 0.3507, 0.4386, 0.4386,
+     0.5475, 0.3507, 0.5475, 0.3507, 0.4386, 0.4386,
+     0.5475, 0.4386, 0.4386,
+     0.4386, 0.4386, 0.4386, 0.4386, 0.4386, 0.0745, 0.0745,
+     0.4386, 0.4386, 0.4386, 0.4386, 0.4386, 0.0745, 0.0745]
+  note: >
+    scale in the config is given as a fraction of the actuator's range, so it
+    is PER-JOINT, not a single number like 0.5. The runner must use exactly
+    this vector.
+
+# WHAT IS NOT IN THE ACTOR VECTOR (and why)
+excluded:
+  - name: base_lin_vel
+    dim: 3
+    reason: >
+      Body linear velocity is not measured by any G1 sensor. The IMU gives
+      angular velocity and acceleration; velocity is the result of state
+      estimation (leg kinematics + EKF), which is noisy and drifts. Removed
+      from the actor, kept for the critic (asymmetric actor-critic, the
+      critic only lives during training).
+    still_in_critic: true

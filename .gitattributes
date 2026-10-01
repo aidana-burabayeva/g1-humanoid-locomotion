@@ -1,0 +1,7 @@
+# Vendored upstream files are kept byte-for-byte.
+third_party/** -whitespace
+*.pt binary
+*.onnx binary
+*.STL binary
+*.mp4 binary
+*.png binary
