@@ -81,6 +81,14 @@ All 60 robots reached the stair section; there were 1/2/1 falls, 0/0/1
 timeouts, and no departures from the row. All nine required flat commands
 passed without falls.
 
+A rerun of the same selection protocol with this repository's image
+([verdict and raw results](results/stairs10_selection_rerun/)) gave regular
+19/20/19, inverted 20/20/20, original route 20/20/20, and a passing flat
+protocol, but the fixed-10 cm route dropped to 15/16/19 (seed-0 repeat
+16/20), so that rerun is a FAIL. The route with 10 cm steps is the weak
+point in both runs; the spread between them is consistent with GPU
+non-determinism and a true success rate in the mid-80 % range.
+
 Held-out test ([verdict and raw results](results/stairs10_heldout/)):
 
 | Scenario | Seed 3 (training) | Seed 4 (held out) | Seed 5 (held out) |

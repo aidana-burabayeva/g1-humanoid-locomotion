@@ -19,6 +19,7 @@ count.
 | [`onnx_parity/`](onnx_parity/) | both | torch vs ONNX Runtime parity, 2 robots × 300 steps on CPU, tolerance 1e-4, with a negative control. |
 | [`sim2sim_28996/`](sim2sim_28996/) | `model_28996` | `obs_builder_check.json`: the sim-to-sim observation builder against mjlab's observation manager. `unitree_mujoco_flat_60s.json`: 60 s in Unitree's G1 MJCF on CPU. |
 | [`stairs10_selection/`](stairs10_selection/) | `model_33800` | 10 cm stair protocol on selection seeds 0–2, including the original route and the flat protocol. PASS. |
+| [`stairs10_selection_rerun/`](stairs10_selection_rerun/) | `model_33800` | The same protocol rerun with this repository's image: stairs and original route pass, fixed-10 cm route 15/16/19. FAIL. |
 | [`stairs10_heldout/`](stairs10_heldout/) | `model_33800` | Held-out seeds 4–5 and training seed 3. FAIL (seed-4 route 16/20). |
 
 Notes:

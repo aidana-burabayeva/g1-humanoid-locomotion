@@ -109,7 +109,7 @@ the held-out run; seed 3 was used in training and is a control. Each cell is
 | Inverted stairs, full crossing | 18/20 | 19/20 | 19/20 |
 | Route with fixed 10 cm steps | 19/20 | 18/20 | 18/20 |
 
-*Selection seeds ([verdict](docs/results/stairs10_selection/verdict.json)).*
+*Selection seeds ([verdict](docs/results/stairs10_selection/verdict.json)). A rerun with this repository's image gave 15/16/19 on the fixed-10 cm route ([verdict](docs/results/stairs10_selection_rerun/verdict.json), FAIL); stairs alone stayed at 19–20/20.*
 
 | Scenario | Seed 3 (training) | Seed 4 (held-out) | Seed 5 (held-out) |
 | --- | ---: | ---: | ---: |

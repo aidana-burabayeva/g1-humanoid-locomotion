@@ -1,0 +1,136 @@
+{
+  "kind": "stairs10_container_acceptance",
+  "model_sha256": "ea7a1f2b3c083e87388f6c3391598d7efbb2096e574395fafa95b8d667068269",
+  "image_id": null,
+  "source_sha256": "8297885a39765054d1764e589e740d16536e3adeb4f20d51697b82738eef5ab8",
+  "dependencies": {
+    "mjlab": "1.6.0",
+    "mujoco": "3.11.0",
+    "mujoco-warp": "3.11.0",
+    "numpy": "2.5.3",
+    "rsl-rl-lib": "5.5.1",
+    "tensordict": "0.14.2",
+    "torch": "2.14.0",
+    "tyro": "1.0.16",
+    "warp-lang": "1.17.0"
+  },
+  "experiment_sources": {
+    "scripts/eval_stairs10.py": "6c7504d95981285a5ebfe9c1a63bb33f9d766424abbe95070aaafb4f4f8ef8ac",
+    "src/g1_locomotion/stairs_eval.py": "23326c6beb770feff7a8235b4983ca71f8ad7e70220511af099276be743cda71",
+    "src/g1_locomotion/mixed_route_eval.py": "4147ad7aa76c5b374b707c83774101c88568b5342d729c1f61aeb5dfb8ba8c78",
+    "src/g1_locomotion/tasks/stairs10.py": "5054ace9dc223ba45f485e9f327f50105ad986672d32624e24d7f134965001f2",
+    "scripts/eval_flat_protocol.py": "7a488d26cb120077820417fa494929c440c04a221019b011dc535c72beca575a"
+  },
+  "python_executable": "/app/.venv/bin/python",
+  "results": {
+    "regular10": [
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.10085947811603546
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.0940900519490242
+      },
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09598401933908463
+      }
+    ],
+    "inverted10": [
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.08895868808031082
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09536494314670563
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.09981291741132736
+      }
+    ],
+    "original": [
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.045313652604818344
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.04930056259036064
+      },
+      {
+        "passed": 20,
+        "fell": 0,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.04810386523604393
+      }
+    ],
+    "mixed10": [
+      {
+        "passed": 15,
+        "fell": 3,
+        "left_row": 0,
+        "not_finished": 2,
+        "mae_vx_m_s": 0.0661148652434349
+      },
+      {
+        "passed": 16,
+        "fell": 2,
+        "left_row": 0,
+        "not_finished": 2,
+        "mae_vx_m_s": 0.07437092810869217
+      },
+      {
+        "passed": 19,
+        "fell": 1,
+        "left_row": 0,
+        "not_finished": 0,
+        "mae_vx_m_s": 0.07068345695734024
+      }
+    ],
+    "flat": "PASS",
+    "mixed10_seed0_repeat": {
+      "passed": 16,
+      "fell": 3,
+      "left_row": 0,
+      "not_finished": 1,
+      "mae_vx_m_s": 0.06836112588644028
+    }
+  },
+  "checks": {
+    "regular10": true,
+    "inverted10": true,
+    "original": true,
+    "mixed10": false,
+    "flat": true,
+    "mixed10_seed0_repeat": false
+  },
+  "overall": "FAIL"
+}
