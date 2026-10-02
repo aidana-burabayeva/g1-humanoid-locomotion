@@ -12,8 +12,10 @@ Everything runs in one Docker image on an NVIDIA GPU: acceptance tests,
 flat-ground command tests, terrain-seam tests, video rendering, ONNX export
 checks, a sim-to-sim run in Unitree's MuJoCo model, and training.
 
-The results below are **simulation results**. Neither checkpoint has been
-run on a physical G1.
+This repository is the curated release of work developed in a private
+research repository with more than 140 logged decisions, experiments and
+reviews. The results below are **simulation results**. Neither checkpoint
+has been run on a physical G1.
 
 | Checkpoint | Status | Files |
 | --- | --- | --- |
@@ -74,9 +76,19 @@ stairs. Those tile tests last about 10 s.
 - **unitree_mujoco.** The ONNX policy runs in Unitree's own G1 MJCF model in
   plain MuJoCo, without mjlab or torch. With a constant 0.5 m/s command on
   flat ground it walked for 60 s without falling: forward-speed MAE 0.047 m/s
-  and no torque saturation. With no steering, its heading drifted by 105° over
-  the run ([result](docs/results/sim2sim_28996/unitree_mujoco_flat_60s.json)).
-  This is one open-loop run, not an accepted sim-to-sim result.
+  and no torque saturation
+  ([result](docs/results/sim2sim_28996/unitree_mujoco_flat_60s.json)).
+- **Open-loop heading drift.** With no steering, the heading drifted by 77°
+  over the first 20 m in unitree_mujoco, versus a median of 22° (max 38°,
+  20 robots) in mjlab ([result](docs/results/sim2sim_28996/mjlab_openloop_drift/result.json)).
+  The same runner and command reproduce the parent checkpoint `model_18997`
+  bit for bit at −4° over 20 m
+  ([control](docs/results/sim2sim_28996/control_parent_18997_flat_60s.json)),
+  so the larger drift is a property of `model_28996` in Unitree's model, not
+  a runner fault. Changing the physics step or using mjlab joint parameters
+  does not remove it (55–80° over 20 m,
+  [variants](docs/results/sim2sim_28996/)). In the route evaluation in
+  mjlab, the path controller closes the heading loop.
 
 ## Videos
 
@@ -109,7 +121,17 @@ the held-out run; seed 3 was used in training and is a control. Each cell is
 | Inverted stairs, full crossing | 18/20 | 19/20 | 19/20 |
 | Route with fixed 10 cm steps | 19/20 | 18/20 | 18/20 |
 
-*Selection seeds ([verdict](docs/results/stairs10_selection/verdict.json)). A rerun with this repository's image gave 15/16/19 on the fixed-10 cm route ([verdict](docs/results/stairs10_selection_rerun/verdict.json), FAIL); stairs alone stayed at 19–20/20.*
+*Selection seeds ([verdict](docs/results/stairs10_selection/verdict.json)).*
+
+The fixed-10 cm route is not bit-reproducible on the GPU: the same seed,
+checkpoint, task and configuration give different counts from run to run.
+
+| Fixed 10 cm route, seed 0 | Runs | Passed per run | Total |
+| --- | ---: | --- | ---: |
+| Development image | 4 | 19, 19, 17, 17 | 72/80 |
+| This repository's image | 5 | 15, 16, 17, 18, 19 | 85/100 |
+
+*Sources: [selection](docs/results/stairs10_selection/verdict.json), [rerun](docs/results/stairs10_selection_rerun/verdict.json), [repeats](docs/results/stairs10_seed0_repeats/). Task configuration and evaluation logic are identical in both images; only import paths differ. The full rerun gave 15/16/19 on the route and FAIL; stairs alone stayed at 19–20/20.*
 
 | Scenario | Seed 3 (training) | Seed 4 (held-out) | Seed 5 (held-out) |
 | --- | ---: | ---: | ---: |
@@ -123,7 +145,11 @@ On the held-out seeds the route succeeded in 33 of 40 runs (82.5 %; 95 %
 Wilson interval 68–91 %), and every fall happened on the stair tile. For a
 policy with an 85 % true success rate, a ≥17/20 gate passes on all three
 seeds only about 27 % of the time, so part of the selection-seed pass came
-from selection. The release checkpoint therefore stays `model_28996`.
+from selection. Pooling every fixed-10 cm route run (16 runs of 20 robots
+on seeds 0–5, both images) gives 280/320 = 87.5 % (95 % Wilson interval
+83–91 %; selection seeds are included, so this is an upper estimate). At that rate the three-seed gate
+passes only about 45 % of the time, so the policy is not stable enough for
+release. The release checkpoint therefore stays `model_28996`.
 Protocol, training settings, and reproduction steps:
 [docs/stairs10-experiment.md](docs/stairs10-experiment.md).
 
@@ -190,8 +216,9 @@ commands and outputs.
   above the 0.10 m/s diagnostic limit. Neither command caused a fall in 20 runs.
 - The random-roughness amplitude is fixed at 0.02–0.06 m on every terrain
   row, so a higher row does not mean rougher ground.
-- There is no accepted sim-to-sim or hardware result. The unitree_mujoco run
-  above is a single open-loop run with heading drift.
+- There is no accepted sim-to-sim or hardware result. In unitree_mujoco the
+  release policy drifts in heading far more than in mjlab, and only flat
+  ground has been tested there.
 - The training service starts and runs iterations inside the image, but
   reproducing a checkpoint end to end has not been verified. The release
   checkpoint comes from a chain of resumed runs; see
@@ -215,3 +242,4 @@ commands and outputs.
 Apache License 2.0 — see [LICENSE](LICENSE). The Unitree G1 model files in
 [`third_party/unitree_mujoco`](third_party/unitree_mujoco) are distributed
 under their own BSD 3-Clause license, included in that directory.
+Dependency licenses are listed in [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

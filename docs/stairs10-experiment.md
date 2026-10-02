@@ -86,8 +86,14 @@ A rerun of the same selection protocol with this repository's image
 19/20/19, inverted 20/20/20, original route 20/20/20, and a passing flat
 protocol, but the fixed-10 cm route dropped to 15/16/19 (seed-0 repeat
 16/20), so that rerun is a FAIL. The route with 10 cm steps is the weak
-point in both runs; the spread between them is consistent with GPU
-non-determinism and a true success rate in the mid-80 % range.
+point in both runs. A parity check ruled out configuration drift: task,
+checkpoint, mjlab commit and dependency versions match, and the task and
+evaluation code differ only in import paths. Repeating seed 0 three more
+times in each image ([raw results](results/stairs10_seed0_repeats/)) gave
+19/17/17 in the development image and 17/18/19 in this repository's image,
+so the spread is GPU run-to-run non-determinism. Pooled over all 16 route
+runs on seeds 0–5 the success rate is 280/320 = 87.5 % (95 % Wilson
+interval 83–91 %).
 
 Held-out test ([verdict and raw results](results/stairs10_heldout/)):
 

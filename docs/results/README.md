@@ -17,9 +17,10 @@ count.
 | [`stairs_tiles_28996/`](stairs_tiles_28996/) | `model_28996` | Regular and inverted 5 cm stair tiles (row 9, no falls) and inverted 10 cm tiles (20/20 and 18/20 falls on seeds 0 and 1). |
 | [`limits_28996/`](limits_28996/) | `model_28996` | Row-9 route (about 21.8° slope): 16/20. |
 | [`onnx_parity/`](onnx_parity/) | both | torch vs ONNX Runtime parity, 2 robots × 300 steps on CPU, tolerance 1e-4, with a negative control. |
-| [`sim2sim_28996/`](sim2sim_28996/) | `model_28996` | `obs_builder_check.json`: the sim-to-sim observation builder against mjlab's observation manager. `unitree_mujoco_flat_60s.json`: 60 s in Unitree's G1 MJCF on CPU. |
+| [`sim2sim_28996/`](sim2sim_28996/) | `model_28996` | `obs_builder_check.json`: the sim-to-sim observation builder against mjlab's observation manager. `unitree_mujoco_flat_60s.json`: 60 s in Unitree's G1 MJCF on CPU; `_dt0002` and `_mjlab_joints` variants change the physics step and the joint parameters. `control_parent_18997_flat_60s.json`: the parent checkpoint `model_18997` (not distributed) with the same runner, identical to its original run. `mjlab_openloop_drift/`: the same open-loop command in mjlab, 20 robots. |
 | [`stairs10_selection/`](stairs10_selection/) | `model_33800` | 10 cm stair protocol on selection seeds 0–2, including the original route and the flat protocol. PASS. |
 | [`stairs10_selection_rerun/`](stairs10_selection_rerun/) | `model_33800` | The same protocol rerun with this repository's image: stairs and original route pass, fixed-10 cm route 15/16/19. FAIL. |
+| [`stairs10_seed0_repeats/`](stairs10_seed0_repeats/) | `model_33800` | Fixed-10 cm route, seed 0, three repeats each in the development image and in this repository's image. Shows run-to-run spread on the GPU (17–19 and 17–19). |
 | [`stairs10_heldout/`](stairs10_heldout/) | `model_33800` | Held-out seeds 4–5 and training seed 3. FAIL (seed-4 route 16/20). |
 
 Notes:
